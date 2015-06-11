@@ -16,10 +16,15 @@ function standard_asset(){
     return standard_web().concat(['Disk Requests xvdc', 'Disk Usage var-lib']);
 }
 
+function standard_rds(){
+    return ['RDS: CPU Usage', 'RDS: Database Connections', 'RDS: RAM available']
+}
+
 var targets = [
     { host: 'stuff-prod-web',     graphs: standard_elb() },
     { host: 'stuff-prod-asset',   graphs: standard_elb() },
     { host: 'stuff-prod-adclick', graphs: standard_elb() },
+    { host: 'stuff-prod-db2',     graphs: standard_rds() },
     { host: 'stuff-prod-web-a1_stuff_catalyst_net_nz',        graphs: standard_web() },
     { host: 'stuff-prod-adclick-a1_stuff_catalyst_net_nz',    graphs: standard_web() },
     { host: 'stuff-prod-asset-a1_stuff_catalyst_net_nz',      graphs: standard_asset() },
@@ -41,6 +46,7 @@ function make_uri(host, from, until, graph){
 var date_range = (function(){
     var d = new Date();
     d.setDate(1);
+    d.setMonth(5);
     var until = d.getTime()/1000;
     var prev_month = d.getMonth();
     d.setMonth(prev_month == 0 ? 11 : prev_month - 1);
@@ -61,12 +67,12 @@ function get_target_graphs(host, graphs, next){
         next && next();
         return;
     }
-    console.log(g);
+    console.log('  - ' + g);
     outstanding_requests++;
     var page = require('webpage').create();
 
     var uri = make_uri(host, date_range.from, date_range.until, g);
-    console.log(uri);
+    console.log('     `- ' + uri);
     page.open(uri, function() {
         page.evaluate(function(){
             document.getElementById('hostTree-wrap').style.display = 'none';
