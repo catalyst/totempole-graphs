@@ -2,6 +2,7 @@
 
 // CONFIG SECTION START -----------------------------------
 
+var MONTH = undefined; // Jan=1, undefined=previous month
 var base_uri = 'http://totempole-a.stuff.catalyst.net.nz/';
 
 function standard_elb(){
@@ -9,7 +10,7 @@ function standard_elb(){
 }
 
 function standard_web(){
-    return ['CPU Usage', 'Load', 'Disk Requests xvdb', 'Disk Usage var-log', 'Interface eth0', 'Memory Usage']
+    return ['CPU Usage', 'Load', 'Disk Requests xvdb', 'Disk Usage var-log', 'Interface eth0', 'Memory Usage', 'Apache Connections']
 }
 
 function standard_asset(){
@@ -37,9 +38,11 @@ function make_uri(host, from, until, graph){
            'graphs=^' + encodeURIComponent(graph) + '$';
 }
 
-// From/until should default to the previous month
 var date_range = (function(){
     var d = new Date();
+    if (typeof(MONTH) !== 'undefined'){
+        d.setMonth(MONTH);
+    }
     d.setDate(1);
     var until = d.getTime()/1000;
     var prev_month = d.getMonth();
