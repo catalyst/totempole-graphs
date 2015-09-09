@@ -51,7 +51,7 @@ var date_range = (function(){
     d.setDate(1);
     var until = d.getTime()/1000;
     var prev_month = d.getMonth();
-    d.setMonth(prev_month == 0 ? 11 : prev_month - 1);
+    d.setMonth(prev_month === 0 ? 11 : prev_month - 1);
     var from = d.getTime()/1000;
     return {
         from:  from|0,
