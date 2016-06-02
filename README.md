@@ -1,4 +1,4 @@
-# totempole-graphs
+# OBSOLETE - just use graphite-web.
 
 ### Usage
 
